@@ -7,6 +7,7 @@ on:
     branches:
       - frontend
       - backend
+      - backend-cicd
 
 env:
   FRNT_DIR: "environment/dev"
@@ -20,23 +21,25 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: List Files
         run: ls -al
 
-      - name: Deploy Backend
+
+# reference : https://github.com/appleboy/scp-action
+      - name: Copy Backend source code
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
-          source: "backend/"
-          target: "~/temp-test/backend"
-
+          source: "backend/*"
+          target: "~/temp-test/"
+# reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3
       - name: Deploy Backend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
         uses: appleboy/ssh-action@v0.1.10
@@ -48,6 +51,18 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
+
+      - name: Copy Frontend source code
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          source: "frontend/*"
+          target: "~/temp-test/"
 
       - name: Deploy Frontend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
