@@ -28,7 +28,7 @@ jobs:
 
       - name: Copy source code: test backend-cicd branch
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend-cicd'
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
