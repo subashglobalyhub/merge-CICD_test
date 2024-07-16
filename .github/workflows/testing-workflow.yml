@@ -31,7 +31,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
@@ -43,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
