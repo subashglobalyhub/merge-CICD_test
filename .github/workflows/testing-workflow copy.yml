@@ -51,7 +51,7 @@ jobs:
           target: ${{ env.BACKEND_TMP_DST_DIR }}
 
   finstall-and-build:
-    if: ${{ env.FRONTEND_CONDN }}
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
     name: Frontend Install and Build
     runs-on: ubuntu-latest
     timeout-minutes: 10
