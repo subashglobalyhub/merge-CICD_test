@@ -224,7 +224,7 @@ jobs:
           script: |
             echo "Deploying Backend!!!"
             #cd ${{ env.BACKEND_DST_DIR }}
-            cp ${BACKEND_TMP_DST_DIR}/${BACKEND_SRC_DIR} ${BACKEND_FINAL_DIR}
+            cp "${BACKEND_TMP_DST_DIR}"/"${BACKEND_SRC_DIR}" "${BACKEND_FINAL_DIR}""
             ls -al
             #composer install
 
@@ -241,4 +241,4 @@ jobs:
             echo "Deploying Frontend and Testing!!!"
             echo "Deploying Backend!!!"
             #cd ${{ env.FRONTEND_DST_DIR }}
-            cp ${FRONTEND_TMP_DST_DIR}/${FRONTEND_SRC_DIR} ${FRONTEND_FINAL_DIR}
+            cp "${FRONTEND_TMP_DST_DIR}"/"${FRONTEND_SRC_DIR}"" "${FRONTEND_FINAL_DIR}"
