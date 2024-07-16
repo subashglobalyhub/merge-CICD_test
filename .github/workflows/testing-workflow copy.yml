@@ -33,8 +33,10 @@ jobs:
       - name: npm install
         working-directory: "frontend/"
         run: |
+          ls -al
           yarn install
           yarn build
+          ls -al
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
