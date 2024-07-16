@@ -11,9 +11,9 @@ on:
       - frontend
       - backend
 env:
-  FRONTEND_SRC_DIR: "frontend/*"
+  FRONTEND_SRC_DIR: "./"
   FRONTEND_DST_DIR: "~/app/superadmin-app/frontend"
-  BACKEND_SRC_DIR: "backend/*"
+  BACKEND_SRC_DIR: "./"
   BACKEND_DST_DIR: "~/app/superadmin-app/backend"
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
 
 # reference : https://github.com/appleboy/scp-action
       - name: Copy Backend source code
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
@@ -38,11 +38,9 @@ jobs:
           command_timeout: 30m
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_DST_DIR }}
-# reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3
-
-
+# reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3LS -AL
       - name: Copy Frontend source code
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
@@ -64,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy Backend
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
@@ -76,7 +74,7 @@ jobs:
             echo "Deploying Backend!!!"
 
       - name: Deploy Frontend
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOSTNAME }}

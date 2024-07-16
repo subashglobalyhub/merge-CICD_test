@@ -13,7 +13,7 @@ on:
 env:
   FRONTEND_SRC_DIR: "./"
   FRONTEND_DST_DIR: "~/temp-test/"
-  BACKEND_SRC_DIR: "backend/*"
+  BACKEND_SRC_DIR: "./"
   BACKEND_DST_DIR: "~/temp-test/"  
 
 jobs:
