@@ -14,7 +14,6 @@ env:
 
 jobs:
   build-and-deploy:
-    name: Testing job
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
