@@ -20,14 +20,14 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: List Files
         run: ls -al
 
       - name: Copy source code
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -39,6 +39,7 @@ jobs:
 
       - name: Deploy Backend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
