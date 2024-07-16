@@ -1,0 +1,25 @@
+name: Sample workflow
+
+on:
+  push:
+    branches:
+      - main
+      - frontend
+      - backend
+
+env:
+  FRNT_DIR: "environment/dev"
+  BACK_DIR: "environment/stage_template_call"
+
+jobs:
+  build-and-deploy:
+    name: Testing job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Listing files
+        run: |
+          ls -al
+        
