@@ -34,6 +34,18 @@ jobs:
           key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
+          source: "backend/"
+          target: "~/temp-test/backend"
+
+      - name: Deploy Backend
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
 
