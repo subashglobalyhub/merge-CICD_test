@@ -54,7 +54,7 @@ jobs:
           #composer install
 
       - name: Copy Backend source code
-        if: ${{ env.BACKEND_CONDN }}
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
@@ -122,7 +122,7 @@ jobs:
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
 
       - name: Deploy Frontend
-        if: ${{ env.FRONTEND_CONDN }}
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
