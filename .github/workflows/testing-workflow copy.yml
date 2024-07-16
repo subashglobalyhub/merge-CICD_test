@@ -11,13 +11,15 @@ on:
       - frontend
       - backend
 env:
-  FRONTEND_SRC_DIR: "./frontend/dist/*"
-  FRONTEND_DST_DIR: "~/temp-test/"
+  FRONTEND_SRC_DIR: "frontend/dist/*"
+  FRONTEND_TMP_DST_DIR: "~/temp-test/"
+  FRONTEND_FINAL_DIR: "~/final-webserver/frontend/"
   BACKEND_SRC_DIR: "./"
-  BACKEND_DST_DIR: "~/temp-test/"  
+  BACKEND_TMP_DST_DIR: "~/temp-test/" 
+  BACKEND_FINAL_DIR: "~/final-webserver/backend" 
 
 jobs:
-  copying-source-code:
+  install-and-build:
     name: Build and Deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -65,7 +67,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           source: ${{ env.BACKEND_SRC_DIR }}
-          target: ${{ env.BACKEND_DST_DIR }}
+          target: ${{ env.BACKEND_TMP_DST_DIR }}
 
 # reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3LS -AL
       - name: Copy Frontend source code
@@ -78,7 +80,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           source: ${{ env.FRONTEND_SRC_DIR }}
-          target: ${{ env.FRONTEND_DST_DIR }}
+          target: ${{ env.FRONTEND_TMP_DST_DIR }}
 
   Deploying-Code:
     name: Deploying the code
@@ -100,7 +102,8 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
-            cd ${{ env.BACKEND_DST_DIR }}
+            #cd ${{ env.BACKEND_DST_DIR }}
+            cp ${BACKEND_TMP_DST_DIR}/${FRONTEND_SRC_DIR} ${BACKEND_FINAL_DIR}
             ls -al
             #composer install
 
@@ -116,5 +119,5 @@ jobs:
           script: |
             echo "Deploying Frontend and Testing!!!"
             echo "Deploying Backend!!!"
-            cd ${{ env.FRONTEND_DST_DIR }}
-            
+            #cd ${{ env.FRONTEND_DST_DIR }}
+            cp ${FRONTEND_TMP_DST_DIR}/${FRONTEND_SRC_DIR} ${FRONTEND_FINAL_DIR}
