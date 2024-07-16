@@ -28,7 +28,7 @@ jobs:
 
 
 # reference : https://github.com/appleboy/scp-action
-      - name: Copy source code
+      - name: Copy Backend source code
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -51,6 +51,18 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
+
+      - name: Copy Frontend source code
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          source: "frontend/*"
+          target: "~/temp-test/"
 
       - name: Deploy Frontend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
