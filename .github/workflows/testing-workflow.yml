@@ -14,44 +14,37 @@ env:
 
 jobs:
   build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Normal Listing files
-        run: |
-          ls -al
+      - name: List Files
+        run: ls -al
 
-      - name: Merge Deploy
-        if: github.event.pull_request.merged == true
-        run: |
-          echo "Deploying to ${GITHUB_REF}"
-          ls -al
+      - name: Deploy Backend
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
+            echo "Deploying Backend!!!"
 
-        # FOR REFERENCE TO LOGIN USING SSH https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3
-    - name: lOGIN to ssh server
-      if: github.event.pull_request.merged == || true github.event_name == 'push' && github.ref == 'refs/heads/backend'
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ inputs.SSH_HOSTNAME }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRV_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        command_timeout: 30m
-        script: | 
-          echo "Nice Job backend!!!"
-
-    - name: lOGIN to ssh server
-      if: github.event.pull_request.merged == || true github.event_name == 'push' && github.ref == 'refs/heads/frontend'
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ inputs.SSH_HOSTNAME }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRV_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        command_timeout: 30m
-        script: | 
-          echo "Nice Job Frontend!!!"
-
+      - name: Deploy Frontend
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
+            echo "Deploying Frontend!!!"
