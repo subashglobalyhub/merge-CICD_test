@@ -51,7 +51,7 @@ jobs:
         working-directory: "backend/"
         run: |
           composer --version
-          composer install
+          #composer install
 
       - name: Copy Backend source code
         if: ${{ env.BACKTEND_CONDN }}
