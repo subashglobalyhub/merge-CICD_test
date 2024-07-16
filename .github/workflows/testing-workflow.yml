@@ -10,8 +10,10 @@ on:
       - backend-cicd
 
 env:
-  FRNT_DIR: "environment/dev"
-  BACK_DIR: "environment/stage_template_call"
+  FRONTEND_SRC_DIR: "frontend/*"
+  FRONTEND_DST_DIR: "~/temp-test/"
+  BACKEND_SRC_DIR: "backend/*"
+  BACKEND_DST_DIR: "~/temp-test/"  
 
 jobs:
   build-and-deploy:
@@ -33,8 +35,8 @@ jobs:
           key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
-          source: "backend/*"
-          target: "~/temp-test/"
+          source: ${{ env.BACKEND_SRC_DIR }}
+          target: ${{ env.BACKEND_DST_DIR }}
 # reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3
       - name: Deploy Backend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
@@ -57,8 +59,8 @@ jobs:
           key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
-          source: "frontend/*"
-          target: "~/temp-test/"
+          source: ${{ env.FRONTEND_SRC_DIR }}
+          target: ${{ env.FRONTEND_DST_DIR }}
 
       - name: Deploy Frontend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
