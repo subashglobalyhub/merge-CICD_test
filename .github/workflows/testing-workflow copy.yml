@@ -116,5 +116,6 @@ jobs:
           script: |
             echo "Deploying Frontend and Testing!!!"
             echo "Deploying Backend!!!"
-            #cd ${{ env.FRONTEND_DST_DIR }}
-            cp -r "${FRONTEND_TMP_DST_DIR}"/"${FRONTEND_SRC_DIR}" "${FRONTEND_FINAL_DIR}"
+            cd ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }}
+            ls -al
+            #cp . ${{ env.FRONTEND_FINAL_DIR }}
