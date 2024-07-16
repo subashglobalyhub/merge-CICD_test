@@ -23,10 +23,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: List Files
-        run: ls -al
-
-
 # reference : https://github.com/appleboy/scp-action
       - name: Copy Backend source code
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
@@ -74,4 +70,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
-            echo "Deploying Frontend!!!"
+            echo "Deploying Frontend and Testing!!!"
