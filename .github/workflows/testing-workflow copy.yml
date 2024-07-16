@@ -12,7 +12,7 @@ on:
 env:
   FRONTEND_SRC_DIR: "frontend/dist/*"
   FRONTEND_TMP_DST_DIR: "~/temp-test/"
-  FRONTEND_FINAL_DIR: "~/final-webserver/frontend/"
+  FRONTEND_FINAL_DIR: "~/final-webserver/frontend"
   BACKEND_SRC_DIR: "./"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend"
@@ -115,4 +115,4 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
-            cp ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
+            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
