@@ -11,7 +11,7 @@ on:
       - frontend
       - backend
 env:
-  FRONTEND_SRC_DIR: "./"
+  FRONTEND_SRC_DIR: "./frontend/build"
   FRONTEND_DST_DIR: "~/temp-test/"
   BACKEND_SRC_DIR: "./"
   BACKEND_DST_DIR: "~/temp-test/"  
@@ -26,6 +26,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: npm install
+        working-directory: "frontend/"
+        run: |
+          npm run install
+        
 # reference : https://github.com/appleboy/scp-action
       - name: Copy Backend source code
         if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
@@ -38,6 +43,7 @@ jobs:
           command_timeout: 30m
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_DST_DIR }}
+
 # reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3LS -AL
       - name: Copy Frontend source code
         if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
@@ -56,7 +62,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [copying-source-code]
     timeout-minutes: 10
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -74,6 +79,7 @@ jobs:
             echo "Deploying Backend!!!"
             cd ${{ env.BACKEND_DST_DIR }}
             ls -al
+            #composer install
 
       - name: Deploy Frontend
         if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
@@ -88,4 +94,4 @@ jobs:
             echo "Deploying Frontend and Testing!!!"
             echo "Deploying Backend!!!"
             cd ${{ env.FRONTEND_DST_DIR }}
-            ls -al
+            
