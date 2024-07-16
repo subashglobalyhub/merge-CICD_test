@@ -82,41 +82,41 @@ jobs:
           source: ${{ env.FRONTEND_SRC_DIR }}
           target: ${{ env.FRONTEND_TMP_DST_DIR }}
 
-    Deploying-Code:
-      name: Deploying the code
-      runs-on: ubuntu-latest
-      needs: [copying-source-code]
-      timeout-minutes: 10
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
-
-        - name: Deploy Backend
-          if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
-          uses: appleboy/ssh-action@v0.1.10
-          with:
-            host: ${{ secrets.SSH_HOSTNAME }}
-            username: ${{ secrets.SSH_USERNAME }}
-            key: ${{ secrets.SSH_PRV_KEY }}
-            port: ${{ secrets.SSH_PORT }}
-            command_timeout: 30m
-            script: |
+  Deploying-Code:
+    name: Deploying the code
+    runs-on: ubuntu-latest
+    needs: [copying-source-code]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Deploy Backend
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
               echo "Deploying Backend!!!"
               #cd ${{ env.BACKEND_DST_DIR }}
               cp ${BACKEND_TMP_DST_DIR}/${FRONTEND_SRC_DIR} ${BACKEND_FINAL_DIR}
               ls -al
               #composer install
 
-        - name: Deploy Frontend
-          if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
-          uses: appleboy/ssh-action@v0.1.10
-          with:
-            host: ${{ secrets.SSH_HOSTNAME }}
-            username: ${{ secrets.SSH_USERNAME }}
-            key: ${{ secrets.SSH_PRV_KEY }}
-            port: ${{ secrets.SSH_PORT }}
-            command_timeout: 30m
-            script: |
+      - name: Deploy Frontend
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
               echo "Deploying Frontend and Testing!!!"
               echo "Deploying Backend!!!"
               #cd ${{ env.FRONTEND_DST_DIR }}
