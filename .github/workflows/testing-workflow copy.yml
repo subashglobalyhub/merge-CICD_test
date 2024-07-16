@@ -115,7 +115,4 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
-            echo "Deploying Backend!!!"
-            cd ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }}
-            ls -al
-            #cp . ${{ env.FRONTEND_FINAL_DIR }}
+            cp ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
