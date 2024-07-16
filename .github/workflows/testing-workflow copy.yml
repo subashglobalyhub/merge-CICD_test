@@ -46,6 +46,7 @@ jobs:
           php-version: '8.3'
 
       - name: Install package using Composer
+        if: ${{ env.BACKEND_CONDN }}
         working-directory: "backend/"
         run: |
           composer --version
