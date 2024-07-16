@@ -76,7 +76,7 @@ jobs:
             echo "Deploying Backend!!!"
 
       - name: Deploy Frontend
-        if: if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
