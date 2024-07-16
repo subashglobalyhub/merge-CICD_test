@@ -28,13 +28,12 @@ jobs:
 
       - name: Copy source code: test backend-cicd branch
         uses: appleboy/scp-action@master
-        env:
+        with:
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
 #          command_timeout: 30m
-        with:
           source: "backend/*"
           target: "~/temp-test/backend/"
 
