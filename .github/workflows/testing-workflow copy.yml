@@ -72,6 +72,8 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
+            cd ${{ env.FRONTEND_DST_DIR }}
+            ls -al
 
       - name: Deploy Frontend
         if: (github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
