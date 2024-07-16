@@ -54,7 +54,7 @@ jobs:
           #composer install
 
       - name: Copy Backend source code
-        if: ${{ env.BACKTEND_CONDN }}
+        if: ${{ env.BACKEND_CONDN }}
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
