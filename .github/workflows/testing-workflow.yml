@@ -35,7 +35,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
-            echo "Deploying Backend!!!"
+            echo "Login to Backend!!!"
 
       - name: Deploy Frontend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
@@ -47,4 +47,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
-            echo "Deploying Frontend!!!"
+            echo "Login to Frontend!!!"
