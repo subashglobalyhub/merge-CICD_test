@@ -1,9 +1,10 @@
-name: Sample workflow
+name: CI/CD Pipeline
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
-      - main
       - frontend
       - backend
 
@@ -19,7 +20,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Listing files
+      - name: Normal Listing files
         run: |
           ls -al
-        
+
+      - name: Merge Deploy
+        if: github.event.pull_request.merged == true
+        run: |
+          echo "Deploying to ${GITHUB_REF}"
+          ls -al
+
+
