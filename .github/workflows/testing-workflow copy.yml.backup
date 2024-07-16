@@ -1,0 +1,87 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - frontend
+      - backend
+
+env:
+  FRONTEND_SRC_DIR: "frontend/*"
+  FRONTEND_DST_DIR: "~/temp-test/"
+  BACKEND_SRC_DIR: "backend/*"
+  BACKEND_DST_DIR: "~/temp-test/"  
+
+jobs:
+  copying-source-code:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+# reference : https://github.com/appleboy/scp-action
+      - name: Copy Backend source code
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          source: ${{ env.BACKEND_SRC_DIR }}
+          target: ${{ env.BACKEND_DST_DIR }}
+# reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3
+
+
+      - name: Copy Frontend source code
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          source: ${{ env.FRONTEND_SRC_DIR }}
+          target: ${{ env.FRONTEND_DST_DIR }}
+
+
+
+  Deploying-Code:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy Backend
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
+            echo "Deploying Backend!!!"
+
+      - name: Deploy Frontend
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
+            echo "Deploying Frontend and Testing!!!"
