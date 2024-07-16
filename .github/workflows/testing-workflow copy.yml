@@ -11,7 +11,7 @@ on:
       - frontend
       - backend
 env:
-  FRONTEND_SRC_DIR: "./frontend/build"
+  FRONTEND_SRC_DIR: "./frontend/build/*"
   FRONTEND_DST_DIR: "~/temp-test/"
   BACKEND_SRC_DIR: "./"
   BACKEND_DST_DIR: "~/temp-test/"  
@@ -35,6 +35,15 @@ jobs:
         run: |
           yarn install
           yarn build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: subash-artifact
+          path: "frontend/build"
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
         
 # reference : https://github.com/appleboy/scp-action
       - name: Copy Backend source code
