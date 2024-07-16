@@ -25,6 +25,7 @@ jobs:
       - name: List Files
         run: ls -al
 
+# reference : https://github.com/appleboy/scp-action
       - name: Copy source code
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
         uses: appleboy/scp-action@v0.1.7
@@ -34,9 +35,9 @@ jobs:
           key: ${{ secrets.SSH_PRV_KEY }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
-          source: "backend/"
+          source: "backend/*"
           target: "~/temp-test/backend"
-
+# reference : https://medium.com/@tcij1013/how-to-use-github-action-to-run-ssh-commands-609df2a88ac3
       - name: Deploy Backend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
         uses: appleboy/ssh-action@v0.1.10
