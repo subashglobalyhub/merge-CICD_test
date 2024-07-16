@@ -7,6 +7,7 @@ on:
     branches:
       - frontend
       - backend
+      - backend-cicd
 
 env:
   FRNT_DIR: "environment/dev"
@@ -24,6 +25,7 @@ jobs:
 
       - name: List Files
         run: ls -al
+
 
 # reference : https://github.com/appleboy/scp-action
       - name: Copy source code
