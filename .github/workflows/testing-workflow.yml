@@ -25,7 +25,7 @@ jobs:
       - name: List Files
         run: ls -al
 
-      - name: Deploy Backend
+      - name: Copy source code
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/backend'
         uses: appleboy/ssh-action@v0.1.10
         with:
