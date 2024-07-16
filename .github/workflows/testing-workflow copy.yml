@@ -52,7 +52,7 @@ jobs:
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_TMP_DST_DIR }}
 
-  binstall-and-build:
+  finstall-and-build:
     if: ${{ env.FRONTEND_CONDN }}
     name: Frontend Install and Build
     runs-on: ubuntu-latest
