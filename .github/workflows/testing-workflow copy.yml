@@ -40,7 +40,7 @@ jobs:
 
 
       - name: Copy Frontend source code
-        if: (github.event_name == 'push' || github.event.pull_request.merged == true) && github.event.pull_request.base.ref == 'backend'
+        if: (github.event_name == 'push' || github.event.pull_request.merged == true) && github.event.pull_request.base.ref == 'frontend'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
