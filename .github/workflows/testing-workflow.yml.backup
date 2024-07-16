@@ -10,9 +10,9 @@ on:
 
 env:
   FRONTEND_SRC_DIR: "frontend/*"
-  FRONTEND_DST_DIR: "~/temp-test/"
+  FRONTEND_DST_DIR: "~/app/superadmin-app/frontend"
   BACKEND_SRC_DIR: "backend/*"
-  BACKEND_DST_DIR: "~/temp-test/"  
+  BACKEND_DST_DIR: "~/app/superadmin-app/backend"  
 
 jobs:
   copying-source-code:
@@ -75,21 +75,6 @@ jobs:
           script: |
             echo "Deploying Backend!!!"
 
-<<<<<<< HEAD:.github/workflows/testing-workflow.yml.backup
-      - name: Copy Frontend source code
-        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOSTNAME }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRV_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          command_timeout: 30m
-          source: ${{ env.FRONTEND_SRC_DIR }}
-          target: ${{ env.FRONTEND_DST_DIR }}
-
-=======
->>>>>>> main:.github/workflows/testing-workflow.yml
       - name: Deploy Frontend
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend'
         uses: appleboy/ssh-action@v0.1.10
@@ -100,8 +85,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
-<<<<<<< HEAD:.github/workflows/testing-workflow.yml.backup
-            echo "Deploying Frontend and Testing!!!"
-=======
-            echo "Deploying Frontend and Testing!!!"
->>>>>>> main:.github/workflows/testing-workflow.yml
+            echo "Deploying Frontend and Testing!!!"pw
