@@ -72,7 +72,7 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
-            cd ${{ env.FRONTEND_DST_DIR }}
+            cd ${{ env.BACKEND_DST_DIR }}
             ls -al
 
       - name: Deploy Frontend
@@ -86,3 +86,6 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
+            echo "Deploying Backend!!!"
+            cd ${{ env.FRONTEND_DST_DIR }}
+            ls -al
