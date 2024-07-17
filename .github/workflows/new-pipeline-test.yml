@@ -75,8 +75,7 @@ jobs:
           command_timeout: 30m
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_TMP_DST_DIR }}
-
-  
+ 
   front-install-and-build:
     if: |
             (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
@@ -155,12 +154,12 @@ jobs:
           script: |
             echo "Deploying Backend and Testing!!!"
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
-            mkdir -p ${{ env.BACKUP_DIR }}/backend-${{ github.sha }}
+            mkdir -p ${{ env.BACKUP_DIR }}/backend-$(date +'%Y-%m-%d')-${{ github.sha }}
 
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
             cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
 
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-${{ github.sha }}
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-$(date +'%Y-%m-%d')-${{ github.sha }}
 
       - name: Deploy Frontend
         if: |
@@ -178,9 +177,9 @@ jobs:
             echo "Deploying Frontend and Testing!!!"
             
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
-            mkdir -p ${{ env.BACKUP_DIR }}/frontend-${{ github.sha }}
+            mkdir -p ${{ env.BACKUP_DIR }}/frontend-$(date +'%Y-%m-%d')-${{ github.sha }}
             
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
-            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-${{ github.sha }}
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-$(date +'%Y-%m-%d')-${{ github.sha }}
             
             
