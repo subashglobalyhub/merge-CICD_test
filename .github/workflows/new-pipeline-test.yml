@@ -19,7 +19,7 @@ env:
   FRONTEND_FINAL_DIR: "~/final-webserver/frontend/"
 
   BACKEND_WRK_DIR: "backend"
-  BACKEND_SRC_DIR: "backend/"
+  BACKEND_SRC_DIR: "backend/*"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend/"
 
