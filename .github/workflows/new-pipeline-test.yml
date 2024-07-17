@@ -56,7 +56,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: backend-artifact__${{date +'%Y-%m-%d'}}__${{git rev-parse --short HEAD}}
+          name: backend-artifact__${{date +'%Y-%m-%d'}}__${{ steps.git_commit_hash.outputs.short_commit_hash }}
           path: "${{ env.BACKEND_WRK_DIR }}"
           if-no-files-found: warn
           compression-level: 6
@@ -105,7 +105,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-artifact__$(date +'%Y-%m-%d')__$(git rev-parse --short HEAD)
+          name: frontend-artifact__$(date +'%Y-%m-%d')__${{ steps.git_commit_hash.outputs.short_commit_hash }}
           path: "${{ env.FRONTEND_WRK_DIR }}/dist"
           if-no-files-found: warn
           compression-level: 6
