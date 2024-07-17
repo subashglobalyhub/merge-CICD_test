@@ -22,7 +22,7 @@ env:
   FRONTEND_FINAL_DIR: "~/app/superadmin-app/frontend/"
   
   BACKEND_WRK_DIR: "server/"
-  BACKEND_SRC_DIR: "server/"
+  BACKEND_SRC_DIR: "server/*"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/app/superadmin-app/backend/"
 
