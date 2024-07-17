@@ -15,12 +15,12 @@ env:
 
   FRONTEND_WRK_DIR: "frontend"
   FRONTEND_SRC_DIR: "frontend/dist/*"
-  FRONTEND_TMP_DST_DIR: "~/backup"
+  FRONTEND_TMP_DST_DIR: "~/backup/"
   FRONTEND_FINAL_DIR: "~/final-webserver/frontend/"
 
   BACKEND_WRK_DIR: "backend"
   BACKEND_SRC_DIR: "backend/*"
-  BACKEND_TMP_DST_DIR: "~/temp-test"
+  BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend/"
 
   BACKUP_DIR: "~/superadmin-backup/"
@@ -153,17 +153,12 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend and Testing!!!"
-
-            Prod_source="${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }}"
-            Prod_Backup="${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}"
-
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
-            mkdir -p "$Prod_Backup"
+            mkdir -p ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
 
-            cp -r  "$Prod_source" ${{ env.BACKEND_FINAL_DIR }}
-
-            cp -r "$Prod_source" "$Prod_Backup"
-            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} 
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
 
       - name: Deploy Frontend
         if: |
@@ -180,13 +175,8 @@ jobs:
           script: |
             echo "Deploying Frontend and Testing!!!"
             
-            Prod_Backup="${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}"
-            Prod_Source="${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }}"
-
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
-            mkdir -p "$Prod_Backup"
+            mkdir -p ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
             
-            cp -r "$Prod_Source" ${{ env.FRONTEND_FINAL_DIR }}
-            cp -r "$Prod_Source" "$Prod_Backup"
-            
-            
+            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
