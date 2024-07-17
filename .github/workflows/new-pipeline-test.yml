@@ -70,7 +70,7 @@ jobs:
             (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
             || 
             (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend') 
-    name: Backend Install and Build
+    name: Frontend Install and Build
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
