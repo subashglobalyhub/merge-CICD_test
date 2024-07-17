@@ -56,7 +56,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: backend-artifact__${{ steps.git_commit_hash.outputs.short_commit_hash }}
+          #name: backend-artifact__${{ github.sha }}
+          name: backend-artifact-${{ steps.git_commit_hash.outputs.short_commit_hash }}
           path: "${{ env.BACKEND_WRK_DIR }}"
           if-no-files-found: warn
           compression-level: 6
@@ -105,7 +106,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-artifact__${{ steps.git_commit_hash.outputs.short_commit_hash }}
+         # name: frontend-artifact__${{ github.sha }}
+          name: frontend-artifact__${{ github.sha }}
           path: "${{ env.FRONTEND_WRK_DIR }}/dist"
           if-no-files-found: warn
           compression-level: 6
