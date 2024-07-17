@@ -96,7 +96,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # frontend pipeline
       - name: npm install
         working-directory: ${{ env.FRONTEND_WRK_DIR }}
         run: |
