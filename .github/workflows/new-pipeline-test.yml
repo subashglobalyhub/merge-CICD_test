@@ -45,7 +45,6 @@ jobs:
           php-version: ${{ matrix.php-version }}
 
       - name: Install package using Composer
-        if: ${{ env.BACKEND_CONDN }}
         working-directory: "backend/"
         run: |
           composer --version
@@ -127,7 +126,12 @@ jobs:
   Deploying-Code:
     name: Deploying the code
     runs-on: ubuntu-latest
-    needs: [front-install-and-build,back-install-and-build]
+#    needs: [front-install-and-build,back-install-and-build]
+    needs: 
+      - back-install-and-build
+      - front-install-and-build
+    if: |
+      always()
     timeout-minutes: 10
 
     steps:
