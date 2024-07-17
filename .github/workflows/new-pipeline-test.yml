@@ -13,12 +13,12 @@ env:
   BACKEND_CONDN: "(github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')"
   FRONTEND_CONDN: "(github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')"
 
-  FRONTEND_WRK_DIR: "frontend/"
+  FRONTEND_WRK_DIR: "frontend"
   FRONTEND_SRC_DIR: "frontend/dist/*"
   FRONTEND_TMP_DST_DIR: "~/temp-test/"
   FRONTEND_FINAL_DIR: "~/final-webserver/frontend/"
 
-  BACKEND_WRK_DIR: "backend/"
+  BACKEND_WRK_DIR: "backend"
   BACKEND_SRC_DIR: "backend/"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend/"
@@ -51,6 +51,15 @@ jobs:
         run: |
           composer --version
           #composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifact
+          path: "${{ env.BACKEND_WRK_DIR }}"
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
 
       - name: Copy Backend source code
         uses: appleboy/scp-action@v0.1.7
@@ -99,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-artifact
-          path: "frontend/dist"
+          path: "${{ env.FRONTEND_WRK_DIR }}/dist"
           if-no-files-found: warn
           compression-level: 6
           overwrite: false
