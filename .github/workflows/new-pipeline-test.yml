@@ -107,7 +107,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-         # name: frontend-artifact__${{ github.sha }}
           name: frontend-artifact__${{ github.sha }}
           path: "${{ env.FRONTEND_WRK_DIR }}/dist"
           if-no-files-found: warn
