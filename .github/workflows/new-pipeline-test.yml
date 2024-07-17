@@ -159,10 +159,10 @@ jobs:
 
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             mkdir -p "$Prod_Backup"
-            
-            cp -r  "Prod_source" ${{ env.BACKEND_FINAL_DIR }}
 
-            cp -r "Prod_source" "$Prod_Backup"
+            cp -r  "$Prod_source" ${{ env.BACKEND_FINAL_DIR }}
+
+            cp -r "$Prod_source" "$Prod_Backup"
             cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} 
 
       - name: Deploy Frontend
