@@ -154,12 +154,12 @@ jobs:
           script: |
             echo "Deploying Backend and Testing!!!"
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
-            mkdir -p ${{ env.BACKUP_DIR }}/backend-$(date +'%Y-%m-%d')-${{ github.sha }}
+            mkdir -p ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___$(git rev-parse --short HEAD)
 
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
             cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
 
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-$(date +'%Y-%m-%d')-${{ github.sha }}
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___$(git rev-parse --short HEAD)
 
       - name: Deploy Frontend
         if: |
@@ -177,9 +177,9 @@ jobs:
             echo "Deploying Frontend and Testing!!!"
             
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
-            mkdir -p ${{ env.BACKUP_DIR }}/frontend-$(date +'%Y-%m-%d')-${{ github.sha }}
+            mkdir -p ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___$(git rev-parse --short HEAD)
             
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
-            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-$(date +'%Y-%m-%d')-${{ github.sha }}
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___$(git rev-parse --short HEAD)
             
             
