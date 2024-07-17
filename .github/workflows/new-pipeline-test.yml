@@ -22,6 +22,7 @@ env:
   BACKEND_SRC_DIR: "backend/*"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend/"
+  ENV_BACKUP_DIR: "~/env-backup/.env"
 
 jobs:
   back-install-and-build:
@@ -100,7 +101,6 @@ jobs:
         run: |
           npm install
           npm run build
-          ls -al dist/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -149,10 +149,11 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
-            echo "Deploying Backend!!!"
+            echo "Deploying Backend and Testing!!!"
             mkdir -p  ${{ env.BACKEND_TMP_DST_DIR }}
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
+            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
 
       - name: Deploy Frontend
         if: |
@@ -171,3 +172,4 @@ jobs:
             mkdir -p ${{ env.FRONTEND_TMP_DST_DIR }}
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
+            
