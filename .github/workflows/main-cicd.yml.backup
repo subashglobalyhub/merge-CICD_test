@@ -1,5 +1,6 @@
 name: CI/CD Pipeline
 
+
 on:
   push:
     branches:
@@ -24,6 +25,9 @@ env:
   BACKEND_SRC_DIR: "server/*"
   BACKEND_TMP_DST_DIR: "~/temp-github-superadmin/"
   BACKEND_FINAL_DIR: "~/app/superadmin-app/backend/"
+
+  BACKUP_DIR: "~/superadmin-backup/"
+  ENV_BACKUP_DIR: "~/env-backup/.env"
 
 jobs:
   back-install-and-build:
@@ -57,7 +61,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: backend-artifact
+          #name: backend-artifact__${{ github.sha }}
+          name: backend-artifact--${{ steps.git_commit_hash.outputs.short_commit_hash }}
           path: "${{ env.BACKEND_WRK_DIR }}"
           if-no-files-found: warn
           compression-level: 6
@@ -73,8 +78,7 @@ jobs:
           command_timeout: 30m
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_TMP_DST_DIR }}
-
-  
+ 
   front-install-and-build:
     if: |
             (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
@@ -102,12 +106,12 @@ jobs:
         run: |
           npm install
           npm run build
-          ls -al dist/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-artifact
+         # name: frontend-artifact__${{ github.sha }}
+          name: frontend-artifact__${{ github.sha }}
           path: "${{ env.FRONTEND_WRK_DIR }}/dist"
           if-no-files-found: warn
           compression-level: 6
@@ -122,7 +126,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           source: ${{ env.FRONTEND_SRC_DIR }}
-          target: ${{ env.FRONTEND_TMP_DST_DIR }}
+          target: ${{ env.FRONTEND_TMP_DST_DIR }}/
 
   Deploying-Code:
     name: Deploying the code
@@ -151,11 +155,14 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           script: |
-            echo "Deploying Backend!!!"
-            mkdir -p  ${{ env.BACKEND_TMP_DST_DIR }}
+            echo "Deploying Backend and Testing!!!"
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
+            mkdir -p ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
+
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
             cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
+
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
 
       - name: Deploy Frontend
         if: |
@@ -171,6 +178,11 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
-            mkdir -p ${{ env.FRONTEND_TMP_DST_DIR }}
+            
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
+            mkdir -p ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            
+            
