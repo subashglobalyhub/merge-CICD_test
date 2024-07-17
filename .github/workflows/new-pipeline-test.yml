@@ -127,7 +127,7 @@ jobs:
   Deploying-Code:
     name: Deploying the code
     runs-on: ubuntu-latest
-#    needs: [install-and-build]
+    needs: [front-install-and-build,back-install-and-build]
     timeout-minutes: 10
 
     steps:
