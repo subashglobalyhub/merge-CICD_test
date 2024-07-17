@@ -22,7 +22,7 @@ env:
   FRONTEND_FINAL_DIR: "~/app/superadmin-app/frontend"
   
   BACKEND_WRK_DIR: "server/"
-  BACKEND_SRC_DIR: "./"
+  BACKEND_SRC_DIR: "server/"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/app/superadmin-app/backend"
 
@@ -38,7 +38,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [8.2]
+        php-version: [7.4]
 
     steps:
       - name: Checkout Repository
@@ -53,7 +53,7 @@ jobs:
         working-directory: ${{ env.BACKEND_WRK_DIR }}
         run: |
           composer --version
-          #composer install
+          #composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Copy Backend source code
         uses: appleboy/scp-action@v0.1.7
