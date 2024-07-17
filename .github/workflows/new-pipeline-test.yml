@@ -13,10 +13,12 @@ env:
   BACKEND_CONDN: "(github.event_name == 'push' && github.ref == 'refs/heads/backend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/backend')"
   FRONTEND_CONDN: "(github.event_name == 'push' && github.ref == 'refs/heads/frontend') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')"
 
+  FRONTEND_WRK_DIR: "frontend/"
   FRONTEND_SRC_DIR: "frontend/dist/*"
   FRONTEND_TMP_DST_DIR: "~/temp-test/"
   FRONTEND_FINAL_DIR: "~/final-webserver/frontend"
 
+  BACKEND_WRK_DIR: "backend/"
   BACKEND_SRC_DIR: "./"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend"
@@ -45,7 +47,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
 
       - name: Install package using Composer
-        working-directory: "backend/"
+        working-directory: ${{ env.BACKEND_WRK_DIR }}
         run: |
           composer --version
           #composer install
@@ -61,7 +63,7 @@ jobs:
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_TMP_DST_DIR }}
 
-
+    ## fontend config
   
   front-install-and-build:
     if: |
@@ -87,16 +89,10 @@ jobs:
 
       # frontend pipeline
       - name: npm install
-        if: |
-            (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
-            || 
-            (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')
-        working-directory: "frontend/"
+        working-directory: ${{ env.FRONTEND_WRK_DIR }}
         run: |
-          ls -al
           npm install
           npm run build
-          ls -al
           ls -al dist/
 
       - name: Upload artifact
@@ -108,11 +104,7 @@ jobs:
           compression-level: 6
           overwrite: false
 
-      - name: Copy Frontend source code
-        if: |
-            (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
-            || 
-            (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend')    
+      - name: Copy Frontend source code 
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
@@ -126,7 +118,6 @@ jobs:
   Deploying-Code:
     name: Deploying the code
     runs-on: ubuntu-latest
-#    needs: [front-install-and-build,back-install-and-build]
     needs: 
       - back-install-and-build
       - front-install-and-build
