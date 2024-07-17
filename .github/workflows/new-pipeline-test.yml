@@ -154,16 +154,16 @@ jobs:
           script: |
             echo "Deploying Backend and Testing!!!"
 
+            Prod_source="${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }}"
             Prod_Backup="${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}"
 
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             mkdir -p "$Prod_Backup"
+            
+            cp -r  "Prod_source" ${{ env.BACKEND_FINAL_DIR }}
 
-
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
-            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} "$Prod_Backup"
-
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} 
+            cp -r "Prod_source" "$Prod_Backup"
+            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} 
 
       - name: Deploy Frontend
         if: |
