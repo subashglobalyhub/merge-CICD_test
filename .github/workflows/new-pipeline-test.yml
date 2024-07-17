@@ -15,13 +15,15 @@ env:
 
   FRONTEND_WRK_DIR: "frontend"
   FRONTEND_SRC_DIR: "frontend/dist/*"
-  FRONTEND_TMP_DST_DIR: "~/temp-test/"
+  FRONTEND_TMP_DST_DIR: "~/backup/"
   FRONTEND_FINAL_DIR: "~/final-webserver/frontend/"
 
   BACKEND_WRK_DIR: "backend"
   BACKEND_SRC_DIR: "backend/*"
   BACKEND_TMP_DST_DIR: "~/temp-test/"
   BACKEND_FINAL_DIR: "~/final-webserver/backend/"
+
+  BACKUP_DIR: "~/superadmin-backup/"
   ENV_BACKUP_DIR: "~/env-backup/.env"
 
 jobs:
@@ -122,7 +124,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           source: ${{ env.FRONTEND_SRC_DIR }}
-          target: ${{ env.FRONTEND_TMP_DST_DIR }}
+          target: ${{ env.FRONTEND_TMP_DST_DIR }}/
 
   Deploying-Code:
     name: Deploying the code
@@ -152,10 +154,13 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend and Testing!!!"
-            mkdir -p  ${{ env.BACKEND_TMP_DST_DIR }}
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
+            mkdir -p ${{ env.BACKUP_DIR }}/backend-${{ github.sha }}
+
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
             cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
+
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-${{ github.sha }}
 
       - name: Deploy Frontend
         if: |
@@ -171,7 +176,11 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
-            mkdir -p ${{ env.FRONTEND_TMP_DST_DIR }}
+            
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
+            mkdir -p ${{ env.BACKUP_DIR }}/frontend-${{ github.sha }}
+            
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend-${{ github.sha }}
+            
             

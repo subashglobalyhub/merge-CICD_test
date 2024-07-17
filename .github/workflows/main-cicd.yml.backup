@@ -152,7 +152,6 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
-            mkdir -p  ${{ env.BACKEND_TMP_DST_DIR }}
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
             cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
@@ -171,6 +170,5 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
-            mkdir -p ${{ env.FRONTEND_TMP_DST_DIR }}
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
