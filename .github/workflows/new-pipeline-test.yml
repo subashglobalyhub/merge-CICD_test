@@ -153,13 +153,17 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend and Testing!!!"
+
+            Prod_Backup="${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}""
+
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
-            mkdir -p ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            mkdir -p "$Prod_Backup"
+
 
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
-            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
+            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} "$Prod_Backup"
 
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} 
 
       - name: Deploy Frontend
         if: |
@@ -176,10 +180,13 @@ jobs:
           script: |
             echo "Deploying Frontend and Testing!!!"
             
+            Prod_Backup="${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}"
+            Prod_Source="${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }}"
+
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
-            mkdir -p ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            mkdir -p "$Prod_Backup"
             
-            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
-            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            cp -r "$Prod_Source" ${{ env.FRONTEND_FINAL_DIR }}
+            cp -r "$Prod_Source" "$Prod_Backup"
             
             
