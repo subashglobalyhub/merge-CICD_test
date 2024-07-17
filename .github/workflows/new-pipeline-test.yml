@@ -72,7 +72,6 @@ jobs:
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_TMP_DST_DIR }}
 
-    ## fontend config
   
   front-install-and-build:
     if: |
