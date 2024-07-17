@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-
 on:
   push:
     branches:
@@ -18,12 +17,12 @@ env:
 
   FRONTEND_WRK_DIR: "client/"
   FRONTEND_SRC_DIR: "client/dist/*"
-  FRONTEND_TMP_DST_DIR: "~/temp-test/"
+  FRONTEND_TMP_DST_DIR: "~/temp-github-superadmin/"
   FRONTEND_FINAL_DIR: "~/app/superadmin-app/frontend/"
   
   BACKEND_WRK_DIR: "server/"
   BACKEND_SRC_DIR: "server/*"
-  BACKEND_TMP_DST_DIR: "~/temp-test/"
+  BACKEND_TMP_DST_DIR: "~/temp-github-superadmin/"
   BACKEND_FINAL_DIR: "~/app/superadmin-app/backend/"
 
 jobs:
@@ -59,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-artifact
-          path: "backend/"
+          path: "${{ env.BACKEND_WRK_DIR }}"
           if-no-files-found: warn
           compression-level: 6
           overwrite: false
@@ -75,14 +74,13 @@ jobs:
           source: ${{ env.BACKEND_SRC_DIR }}
           target: ${{ env.BACKEND_TMP_DST_DIR }}
 
-    ## fontend config
   
   front-install-and-build:
     if: |
             (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
             || 
             (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/frontend') 
-    name: Backend Install and Build
+    name: Frontend Install and Build
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -99,14 +97,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # frontend pipeline
       - name: npm install
         working-directory: ${{ env.FRONTEND_WRK_DIR }}
         run: |
-          ls -al
           npm install
           npm run build
-          ls -al
           ls -al dist/
 
       - name: Upload artifact
@@ -118,7 +113,7 @@ jobs:
           compression-level: 6
           overwrite: false
 
-      - name: Copy Frontend source code   
+      - name: Copy Frontend source code 
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOSTNAME }}
@@ -157,6 +152,8 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Backend!!!"
+            mkdir -p  ${{ env.BACKEND_TMP_DST_DIR }}
+            mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
 
       - name: Deploy Frontend
@@ -173,4 +170,6 @@ jobs:
           command_timeout: 30m
           script: |
             echo "Deploying Frontend and Testing!!!"
+            mkdir -p ${{ env.FRONTEND_TMP_DST_DIR }}
+            mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
