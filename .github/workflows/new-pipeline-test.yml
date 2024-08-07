@@ -158,9 +158,9 @@ jobs:
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             mkdir -p ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
 
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
-            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }} || exit 1
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }} || exit 1
+            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} || exit 1
 
       - name: Deploy Frontend
         if: |
