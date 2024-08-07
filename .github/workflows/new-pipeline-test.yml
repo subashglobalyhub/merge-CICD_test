@@ -128,7 +128,7 @@ jobs:
         working-directory: ${{ env.FRONTEND_WRK_DIR }}
         run: |
             dlkfjglsd dlfjhgls
-            
+
   Deploying-Code:
     name: Deploying the code
     runs-on: ubuntu-latest
@@ -136,10 +136,10 @@ jobs:
       - back-install-and-build
       - front-install-and-build
     if: |
-      always() 
-#      (needs.back-install-and-build.result == 'success' || needs.front-install-and-build.result == 'success') &&
-#      !(needs.back-install-and-build.result == 'failure' && needs.front-install-and-build.result == 'skipped') &&
-#      !(needs.front-install-and-build.result == 'failure' && needs.back-install-and-build.result == 'skipped')
+      always() &&
+     (needs.back-install-and-build.result == 'success' || needs.front-install-and-build.result == 'success') &&
+     !(needs.back-install-and-build.result == 'failure' && needs.front-install-and-build.result == 'skipped') &&
+     !(needs.front-install-and-build.result == 'failure' && needs.back-install-and-build.result == 'skipped')
     timeout-minutes: 10
 
     steps:
