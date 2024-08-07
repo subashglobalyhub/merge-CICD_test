@@ -131,7 +131,10 @@ jobs:
       - back-install-and-build
       - front-install-and-build
     if: |
-      always()
+      always() &&
+      (needs.back-install-and-build.result == 'success' || needs.front-install-and-build.result == 'success') &&
+      !(needs.back-install-and-build.result == 'failure' && needs.front-install-and-build.result == 'skipped') &&
+      !(needs.front-install-and-build.result == 'failure' && needs.back-install-and-build.result == 'skipped')
     timeout-minutes: 10
 
     steps:
@@ -177,5 +180,7 @@ jobs:
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
             mkdir -p ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
             
-            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
-            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }} || exit 1
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }} || exit 1
+
+            ls -al
