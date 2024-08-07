@@ -104,6 +104,12 @@ jobs:
           npm install
           npm run build
 
+      - name: Running random command to fail job
+        working-directory: ${{ env.FRONTEND_WRK_DIR }}
+        run: |
+            dlkfjglsd dlfjhgls 
+
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -132,9 +138,9 @@ jobs:
       - front-install-and-build
     if: |
       always() &&
-      (needs.back-install-and-build.result == 'success' || needs.front-install-and-build.result == 'success') &&
-      !(needs.back-install-and-build.result == 'failure' && needs.front-install-and-build.result == 'skipped') &&
-      !(needs.front-install-and-build.result == 'failure' && needs.back-install-and-build.result == 'skipped')
+      # (needs.back-install-and-build.result == 'success' || needs.front-install-and-build.result == 'success') &&
+      # !(needs.back-install-and-build.result == 'failure' && needs.front-install-and-build.result == 'skipped') &&
+      # !(needs.front-install-and-build.result == 'failure' && needs.back-install-and-build.result == 'skipped')
     timeout-minutes: 10
 
     steps:
