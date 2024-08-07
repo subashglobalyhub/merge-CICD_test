@@ -124,11 +124,6 @@ jobs:
           source: ${{ env.FRONTEND_SRC_DIR }}
           target: ${{ env.FRONTEND_TMP_DST_DIR }}/
 
-      - name: Running random command to fail job
-        working-directory: ${{ env.FRONTEND_WRK_DIR }}
-        run: |
-            dlkfjglsd dlfjhgls
-
   Deploying-Code:
     name: Deploying the code
     runs-on: ubuntu-latest
