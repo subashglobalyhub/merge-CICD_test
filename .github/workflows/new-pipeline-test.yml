@@ -181,7 +181,7 @@ jobs:
             cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }} || exit 1
             cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }} || exit 1
 
-            sudo systemctl stop nginx
+            sudo systemctl restart nginx
             if ! sudo systemctl is-active --quiet nginx; then
               #displyaing_in_red
               echo -e "\e[31mWARNING: Nginx is not running properly after restart!\e[0m"
