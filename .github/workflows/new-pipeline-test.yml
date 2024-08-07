@@ -54,7 +54,6 @@ jobs:
         run: |
           composer --version
           #composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -103,7 +102,11 @@ jobs:
         run: |
           npm install
           npm run build
-
+      - name: Running random command to fail job
+        working-directory: ${{ env.FRONTEND_WRK_DIR }}
+        run: |
+            dlkfjglsd dlfjhgls 
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -131,7 +134,10 @@ jobs:
       - back-install-and-build
       - front-install-and-build
     if: |
-      always()
+      always() 
+#      (needs.back-install-and-build.result == 'success' || needs.front-install-and-build.result == 'success') &&
+#      !(needs.back-install-and-build.result == 'failure' && needs.front-install-and-build.result == 'skipped') &&
+#      !(needs.front-install-and-build.result == 'failure' && needs.back-install-and-build.result == 'skipped')
     timeout-minutes: 10
 
     steps:
@@ -154,11 +160,9 @@ jobs:
             echo "Deploying Backend and Testing!!!"
             mkdir -p  ${{ env.BACKEND_FINAL_DIR }}
             mkdir -p ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
-
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }}
-            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }}
-            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }}
-
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKEND_FINAL_DIR }} || exit 1
+            cp -r ${{ env.BACKEND_TMP_DST_DIR }}/${{ env.BACKEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/backend__$(date +'%Y-%m-%d')___${{ github.sha }} || exit 1
+            cp -r  ${{ env.ENV_BACKUP_DIR }} ${{ env.BACKEND_FINAL_DIR }} || exit 1
       - name: Deploy Frontend
         if: |
             (github.event_name == 'push' && github.ref == 'refs/heads/frontend') 
@@ -177,5 +181,5 @@ jobs:
             mkdir -p ${{ env.FRONTEND_FINAL_DIR }}
             mkdir -p ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
             
-            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }}
-            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }}
+            cp -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.FRONTEND_FINAL_DIR }} || exit 1
+            cp -r -r ${{ env.FRONTEND_TMP_DST_DIR }}/${{ env.FRONTEND_SRC_DIR }} ${{ env.BACKUP_DIR }}/frontend__$(date +'%Y-%m-%d')___${{ github.sha }} || exit 
